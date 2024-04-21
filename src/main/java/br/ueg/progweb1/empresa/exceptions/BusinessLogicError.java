@@ -4,15 +4,14 @@ import lombok.Getter;
 
 @Getter
 public enum BusinessLogicError {
-    GERAL(0L,"Erro desconhecido"),
+    GERAL(0L, "Erro desconhecido"),
 
-    REGISTRO_DUPLICADO(1L,"Registro duplicado"),
-
-    CAMPO_VAZIO(2L,"Parametro vazio");
+    REGISTRO_DUPLICADO(1L, "Registro duplicado"),
+    CAMPO_VAZIO(2L, "Parametro vazio"),
+    ERROR_ID(3L, "Id não encontrado");
 
     private Long id;
     private String message;
-
 
 
     BusinessLogicError(Long id, String nomeFantasia) {

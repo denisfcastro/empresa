@@ -10,8 +10,6 @@ import br.ueg.progweb1.empresa.service.EmpresaService;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,23 +26,30 @@ public class EmpresaServiceImp implements EmpresaService {
     @Override
     public Empresa incluir(Empresa empresa) {
         prepararEmpresaParaIncluir(empresa);
+        validarDuplicidade(empresa);
         validateMandatoryFields(empresa);
-        validateBussinessLogic(empresa);
         return repository.save(empresa);
+    }
+
+    private void validarDuplicidade(Empresa empresa) {
+        Optional<Empresa> empresaADD = null;
+        empresaADD = repository.findEmpresaByCNPJ(empresa.getCNPJ());
+        if (empresaADD.isPresent()) {
+            throw new BusinessLogicException(BusinessLogicError.REGISTRO_DUPLICADO);
+        }
+
     }
 
     private void prepararEmpresaParaIncluir(Empresa empresa) {
         empresa.setId(null);
-        empresa.setDataFundacao(LocalDate.now());
     }
 
     @Override
     public Empresa alterar(Empresa empresa) {
-        var dadoBusca = validarRegistroExistente(empresa.getId());
-        validadeMandatoryFieldsAlterar(empresa);
-        validateBussinessLogic(empresa);
-
+        var dadoBusca = validateIdSaleExists(empresa.getId());
         setDadosEmpresaConsultada(dadoBusca, empresa);
+        validateMandatoryFields(dadoBusca);
+        validarDuplicidade(dadoBusca);
         return repository.save(dadoBusca);
     }
 
@@ -52,6 +57,7 @@ public class EmpresaServiceImp implements EmpresaService {
         dadoBusca.setCep(empresa.getCep());
         dadoBusca.setLogradouro(empresa.getLogradouro());
         dadoBusca.setNomeFantasia(empresa.getNomeFantasia());
+        dadoBusca.setRural(empresa.getRural());
     }
 
     private Empresa validarRegistroExistente(Long idEmpresa) {
@@ -77,18 +83,12 @@ public class EmpresaServiceImp implements EmpresaService {
 
 
     @Override
-    public Empresa excluir(Empresa empresa) {
-        return null;
+    public void excluirEmpresaPorID(Long id) {
+        Empresa empresaParaRemover = this.validarRegistroExistente(id);
+        this.repository.delete(empresaParaRemover);
     }
 
-    private void validateBussinessLogic(Empresa empresa) {
-
-    }
-
-    private void validadeMandatoryFieldsAlterar(Empresa empresa) {
-    }
-
-    private Optional<Empresa> validarConsultaPorNomeFantasia(Empresa empresa) {
+    private Optional<Empresa> consultaPorNomeFantasia(Empresa empresa) {
         Optional<Empresa> empresaConsultada = null;
         if (empresa.getNomeFantasia().isEmpty()) {
             throw new BusinessLogicException(BusinessLogicError.CAMPO_VAZIO);
@@ -101,11 +101,18 @@ public class EmpresaServiceImp implements EmpresaService {
         return empresaConsultada;
     }
 
+    public Empresa validateIdSaleExists(Long id) {
+        Optional<Empresa> empresa = repository.findById(id);
+        if (empresa.isPresent()) {
+            return empresa.get();
+        } else {
+            throw new BusinessLogicException(BusinessLogicError.ERROR_ID);
+        }
+    }
 
-    private static void validateMandatoryFields(Empresa empresa) {
-        if (Strings.isEmpty(empresa.getCep()) ||
-                Strings.isEmpty(empresa.getLogradouro()) ||
-                Strings.isEmpty(empresa.getNomeFantasia())) {
+
+    private void validateMandatoryFields(Empresa empresa) {
+        if (Strings.isEmpty(empresa.getCNPJ()) || Strings.isEmpty(empresa.getNomeFantasia())) {
             throw new MandatoryException("Campos Obrigatórios não preenchidos");
         }
 

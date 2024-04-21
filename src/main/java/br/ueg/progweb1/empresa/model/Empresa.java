@@ -16,21 +16,26 @@ import java.time.LocalDate;
 public class Empresa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="ID", nullable = false)
+    @Column(name="ID")
     private Long id;
 
     @Column(name = "Nome_Fantasia", nullable = false, length = 150)
     private String nomeFantasia;
 
-    @Column(name = "Logradouro", nullable = false, length = 200)
+    @Column(name = "Logradouro", length = 200)
     private String logradouro;
 
-    @Column(name = "CEP", nullable = false, length = 20)
+    @Column(name = "CEP",length = 20)
     private String cep;
 
-
-    @Column(name = "Data_Fundacao", nullable = false, length = 20)
+    @Column(name = "Data_Fundacao", length = 20)
     private LocalDate dataFundacao;
+
+    @Column(name = "CNPJ", nullable = false, length = 200)
+    private String CNPJ;
+
+    @Column(name = "Empresa_Rural", length = 200)
+    private Boolean Rural;
 
 }
 
