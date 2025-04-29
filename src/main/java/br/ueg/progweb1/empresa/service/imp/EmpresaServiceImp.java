@@ -50,14 +50,14 @@ public class EmpresaServiceImp implements EmpresaService {
         setDadosEmpresaConsultada(dadoBusca, empresa);
         validateMandatoryFields(dadoBusca);
         validarDuplicidade(dadoBusca);
-        return repository.save(dadoBusca);
+        return repository.save(empresa);
     }
 
     private void setDadosEmpresaConsultada(Empresa dadoBusca, Empresa empresa) {
         dadoBusca.setCep(empresa.getCep());
         dadoBusca.setLogradouro(empresa.getLogradouro());
         dadoBusca.setNomeFantasia(empresa.getNomeFantasia());
-        dadoBusca.setRural(empresa.getRural());
+        dadoBusca.setStatus(empresa.getStatus());
     }
 
     private Empresa validarRegistroExistente(Long idEmpresa) {

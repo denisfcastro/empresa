@@ -13,5 +13,5 @@ public class EmpresaDTO {
     private String cep;
     private LocalDate dataFundacao;
     private String CNPJ;
-    private Boolean Rural;
+    private Boolean status;
 }

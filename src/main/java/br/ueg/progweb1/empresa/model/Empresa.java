@@ -34,8 +34,8 @@ public class Empresa {
     @Column(name = "CNPJ", nullable = false, length = 200)
     private String CNPJ;
 
-    @Column(name = "Empresa_Rural", length = 200)
-    private Boolean Rural;
+    @Column(name = "status", length = 200)
+    private Boolean Status;
 
 }
 

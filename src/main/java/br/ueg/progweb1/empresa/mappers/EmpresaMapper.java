@@ -13,7 +13,7 @@ public class EmpresaMapper {
         empresa.setNomeFantasia(empresaDTO.getNomeFantasia());
         empresa.setCNPJ(empresaDTO.getCNPJ());
         empresa.setDataFundacao(empresaDTO.getDataFundacao());
-        empresa.setRural(empresaDTO.getRural());
+        empresa.setStatus(empresaDTO.getStatus());
         return empresa;
     }
 
