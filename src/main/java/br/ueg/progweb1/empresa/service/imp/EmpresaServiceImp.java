@@ -49,7 +49,7 @@ public class EmpresaServiceImp implements EmpresaService {
         var dadoBusca = validateIdSaleExists(empresa.getId());
         setDadosEmpresaConsultada(dadoBusca, empresa);
         validateMandatoryFields(dadoBusca);
-        validarDuplicidade(dadoBusca);
+//        validarDuplicidade(dadoBusca);
         return repository.save(empresa);
     }
 
