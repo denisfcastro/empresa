@@ -25,10 +25,23 @@ public class EmpresaServiceImp implements EmpresaService {
 
     @Override
     public Empresa incluir(Empresa empresa) {
+        removerCaracteresEspeciais(empresa);
+
         prepararEmpresaParaIncluir(empresa);
         validarDuplicidade(empresa);
         validateMandatoryFields(empresa);
+        validateTamanhoCNPJ(empresa);
         return repository.save(empresa);
+    }
+
+    private void removerCaracteresEspeciais(Empresa empresa) {
+        empresa.setCNPJ(empresa.getCNPJ().replaceAll("\\D", ""));
+    }
+
+    private void validateTamanhoCNPJ(Empresa empresa) {
+        if (empresa.getCNPJ().length() < 14) {
+            throw new BusinessLogicException(BusinessLogicError.CNPJ_INVALIDO);
+        }
     }
 
     private void validarDuplicidade(Empresa empresa) {
@@ -46,10 +59,13 @@ public class EmpresaServiceImp implements EmpresaService {
 
     @Override
     public Empresa alterar(Empresa empresa) {
+        removerCaracteresEspeciais(empresa);
+
         var dadoBusca = validateIdSaleExists(empresa.getId());
         setDadosEmpresaConsultada(dadoBusca, empresa);
         validateMandatoryFields(dadoBusca);
-//        validarDuplicidade(dadoBusca);
+        validarDuplicidade(dadoBusca);
+        validateTamanhoCNPJ(dadoBusca);
         return repository.save(empresa);
     }
 
@@ -57,6 +73,7 @@ public class EmpresaServiceImp implements EmpresaService {
         dadoBusca.setCep(empresa.getCep());
         dadoBusca.setLogradouro(empresa.getLogradouro());
         dadoBusca.setNomeFantasia(empresa.getNomeFantasia());
+        dadoBusca.setCNPJ(empresa.getCNPJ());
         dadoBusca.setStatus(empresa.getStatus());
     }
 
