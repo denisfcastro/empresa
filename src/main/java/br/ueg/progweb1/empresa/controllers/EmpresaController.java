@@ -50,7 +50,7 @@ public class EmpresaController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("ERRO:" + e.getMessage());
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro desconhecido aconteceu: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body( e.getMessage());
         }
 
         return ResponseEntity.ok(empresaIncluir);
@@ -75,7 +75,7 @@ public class EmpresaController {
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Erro desconhecido aconteceu: " + e.getMessage());
+                    .body(e.getMessage());
         }
 
         return ResponseEntity.ok(empresaIncluir);

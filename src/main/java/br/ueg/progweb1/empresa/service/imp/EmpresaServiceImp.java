@@ -53,6 +53,16 @@ public class EmpresaServiceImp implements EmpresaService {
 
     }
 
+    private void validarDuplicidadeAlterar(Empresa empresa) {
+        Optional<Empresa> empresaADD = null;
+        empresaADD = repository.findEmpresaByCNPJ(empresa.getCNPJ());
+        if (empresaADD.isPresent() && !empresaADD.get().getId().equals(empresa.getId())) {
+            throw new BusinessLogicException(BusinessLogicError.REGISTRO_DUPLICADO);
+        }
+
+    }
+
+
     private void prepararEmpresaParaIncluir(Empresa empresa) {
         empresa.setId(null);
     }
@@ -64,7 +74,7 @@ public class EmpresaServiceImp implements EmpresaService {
         var dadoBusca = validateIdSaleExists(empresa.getId());
         setDadosEmpresaConsultada(dadoBusca, empresa);
         validateMandatoryFields(dadoBusca);
-        validarDuplicidade(dadoBusca);
+        validarDuplicidadeAlterar(dadoBusca);
         validateTamanhoCNPJ(dadoBusca);
         return repository.save(empresa);
     }
