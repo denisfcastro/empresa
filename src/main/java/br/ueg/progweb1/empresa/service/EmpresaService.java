@@ -14,6 +14,5 @@ public interface EmpresaService {
 
     void excluirEmpresaPorID(Long id);
     Empresa validateIdSaleExists(Long id);
-//    Empresa consultaPorNomeFantasia(String nome);
 
 }
