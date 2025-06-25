@@ -31,14 +31,11 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // [NOVA ABORDAGEM]
-    // Criamos um "provedor de autenticação" explícito para dizer ao Spring como validar o login.
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        // Define o nosso serviço (LoginServicoImp) para encontrar o usuário.
         authProvider.setUserDetailsService(userDetailsService);
-        // Define o nosso codificador (BCrypt) para comparar as senhas.
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
@@ -58,7 +55,6 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Para Swagger, se usar
                         .anyRequest().authenticated()
                 )
-                // [NOVA ABORDAGEM] Informamos ao HttpSecurity para usar o nosso provedor configurado.
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
